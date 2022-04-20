@@ -11,9 +11,10 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 
 class LoginFormAuthenticator extends AbstractAuthenticator
 {
-    public function supports(Request $request): ?bool
+    public function supports(Request $request): bool
     {
-        // TODO: Implement supports() method.
+        return $request->attributes->get('_route') === 'security_login'
+            && $request->isMethod('POST');
     }
 
     public function authenticate(Request $request): Passport
