@@ -1,0 +1,21 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Creation d'un artcile
+{% endblock %}
+
+{% block body %}
+    <h1>Nouvel article</h1>
+    <div class="row">
+        <div class="col">
+            <div class="card">
+            <div class="card-body">
+            {{ form(formView) }}
+            </div>
+        </div>
+    </div>
+    {% if app.user %}
+        <a type="button" class="btn btn-success btn-sm" href="">Créer un nouvel article</a>
+    {% endif %}
+
+{% endblock %}
