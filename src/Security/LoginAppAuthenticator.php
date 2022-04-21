@@ -48,8 +48,8 @@ class LoginAppAuthenticator extends AbstractLoginFormAuthenticator
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
-        throw new \Exception('TODO: error ');
-        // return new RedirectResponse($this->urlGenerator->generate('security_login')); // return new RedirectResponse('/');
+        // throw new \Exception('TODO: error ');
+        return new RedirectResponse($this->urlGenerator->generate('app_home')); // return new RedirectResponse('/');
         // throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
