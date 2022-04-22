@@ -2,11 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Post;
 use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
@@ -62,39 +63,31 @@ class PostController extends AbstractController
 
         $builder->add('titre', TextType::class, [
             'label' => "Titre de l'article",
-            'attr' => ['class' => 'form-control', 'placeholder' => 'Tapez le titre']
+            'attr' => ['placeholder' => 'Tapez le titre']
         ])
             ->add('slug', TextType::class, [
                 'label' => "Slug de l'article",
-                'attr' => ['class' => 'form-control', 'placeholder' => 'Tapez le slug']
+                'attr' => ['placeholder' => 'Tapez le slug']
             ])
             ->add('shortDescription', TextType::class, [
                 'label' => "Résumé de l'article",
-                'attr' => ['class' => 'form-control', 'placeholder' => "Tapez un court résumé de votre article"]
+                'attr' => ['placeholder' => "Tapez un court résumé de votre article"]
             ])
             ->add('content', TextareaType::class, [
                 'label' => "Le contenu de l'article",
-                'attr' => ['class' => 'form-control', 'placeholder' => 'Tapez le contenu de votre article']
+                'attr' => ['placeholder' => 'Tapez le contenu de votre article']
             ])
             ->add('picture', TextType::class, [
                 'label' => "Image de l'article",
-                'attr' => ['class' => 'form-control', 'placeholder' => "Tapez le lien vers l'image de votre article"]
+                'attr' => ['placeholder' => "Tapez le lien vers l'image de votre article"]
             ]);
 
-            $options = [];
-            foreach ($categoryRepository->findAll() as $category) {
-                $options[$category->getName()] = $category->getId();
-            };
-
-            $builder->add('category', ChoiceType::class, [
-                'label' => "Categorie de l'article",
-                'attr' => ['class' => 'form-control'],
-                'placeholder' => "--Choisir une catégorie --",
-                'choices' => $options
-            ]);
-
-        $builder->setMethod('GET')
-            ->setAction('/');
+        $builder->add('category', EntityType::class, [
+            'label' => "Catégorie",
+            'placeholder' => "--Choisir une catégorie --",
+            'class' => Category::class,
+            'choice_label' => 'name',
+        ]);
 
         $form = $builder->getForm();
 
