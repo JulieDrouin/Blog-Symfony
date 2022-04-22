@@ -13,14 +13,14 @@
                 <div class="card-body">
                     <h4 class="card-title">{{ post.title }}</h4>
                     <span class="badge rounded-pill bg-info">{{ post.createdAt|date("d/m/Y") }}</span>
-                    <p class="card-text">{{ post.content }}</p>
-                    <a href="{{ path("app_post_read_id",  { id: post.id } ) }}" class="btn btn-primary btn-sm">Lire intégralement</a>
+                    <p class="card-text">{{ post.shortDescription }}</p>
+                    <a href="{{ path("app_post_read",  { 'category_slug': post.category.slug, 'slug': post.slug } ) }}" class="btn btn-primary btn-sm">Lire le post</a>
                 </div>
             </div>
         </div>
     </div>
     {% if app.user %}
-        <a type="button" class="btn btn-success btn-sm" href="">Créer un nouvel article</a>
+        <a type="button" class="btn btn-success btn-sm" href="{{ path("app_post_create") }}">Créer un nouvel article</a>
     {% endif %}
 
 {% endblock %}

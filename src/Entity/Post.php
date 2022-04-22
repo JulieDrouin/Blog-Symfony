@@ -30,6 +30,11 @@ class Post
     /**
      * @ORM\Column(type="text")
      */
+    private $shortDescription;
+
+    /**
+     * @ORM\Column(type="text")
+     */
     private $content;
 
     /**
@@ -46,6 +51,11 @@ class Post
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private $updatesAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="posts")
+     */
+    private $category;
 
     public function getId(): ?int
     {
@@ -72,6 +82,18 @@ class Post
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getShortDescription(): ?string
+    {
+        return $this->shortDescription;
+    }
+
+    public function setShortDescription(string $shortDescription): self
+    {
+        $this->shortDescription = $shortDescription;
 
         return $this;
     }
@@ -120,6 +142,18 @@ class Post
     public function setUpdatesAt(\DateTimeImmutable $updatesAt): self
     {
         $this->updatesAt = $updatesAt;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }
