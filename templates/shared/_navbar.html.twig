@@ -19,12 +19,12 @@
 					{% endif %}
 				</li>
 			</ul>
-			{# {% if app.user %} #}
+			{% if app.user %}
 				<a type="button" class="btn btn-warning my-2 my-sm-0" href="{{ path('app_logout') }}">Se Deconnecter</a>
-			{# {% endif %} #}
-			{# {% if app.user is null %} #}
+			{% endif %}
+			{% if app.user is null %}
 				<a type="button" class="btn btn-primary my-2 my-sm-0" href="{{ path('security_login') }}">Connexion</a>
-			{# {% endif %} #}
+			{% endif %}
 		</div>
 	</div>
 </nav>
