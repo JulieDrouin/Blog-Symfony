@@ -50,7 +50,7 @@ class Post
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    private $updatesAt;
+    private $updatedAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="posts")
@@ -134,14 +134,14 @@ class Post
         return $this;
     }
 
-    public function getUpdatesAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->updatesAt;
+        return $this->updatedAt;
     }
 
-    public function setUpdatesAt(\DateTimeImmutable $updatesAt): self
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
     {
-        $this->updatesAt = $updatesAt;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

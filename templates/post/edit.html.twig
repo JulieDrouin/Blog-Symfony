@@ -1,0 +1,31 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Modification de l'article {{ post.title }}
+{% endblock %}
+
+{% block body %}
+    <h4>
+        Modfier l'article {{ post.title }}
+    </h4>
+    {{ form_start(formView) }}
+    {{ form_errors(formView) }}
+    <div class="row">
+        <div class="col">
+            {{ form_row(formView.title) }}
+            {{ form_row(formView.shortDescription) }}
+            {{ form_row(formView.content) }}
+        </div>
+        <div class="col">
+            {{ form_row(formView.picture) }}
+            {{ form_row(formView.category) }}
+        </div>
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary" role="button">
+                <i class="fas fa-save"></i>
+                Modifier le post
+            </button>
+        </div>
+    </div>
+    {{ form_end(formView) }}
+{% endblock %}

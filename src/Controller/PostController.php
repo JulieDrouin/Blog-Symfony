@@ -78,7 +78,6 @@ class PostController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $post = $form->getData();
             $post->setSlug(strtolower($slugger->slug($post->getTitle())));
             $post->setCreatedAt(new \DateTimeImmutable());
 
@@ -89,6 +88,46 @@ class PostController extends AbstractController
         $formView = $form->createView();
 
         return $this->render('post/create.html.twig', [
+            'formView' => $formView
+        ]);
+    }
+
+    /**
+     * @Route("/admin/post/{id}/edit", name="post_edit")
+     */
+    public function edit($id, PostRepository $postRepository, Request $request, SluggerInterface $slugger, EntityManagerInterface $em): Response
+    {
+        $post = $postRepository->find($id);
+        $form = $this->createForm(PostType::class, $post);
+
+        $form->handleRequest($request);
+
+        if ($request->isXmlHttpRequest()) {
+            $data = json_decode($request->getContent(), true);
+            $form->submit($data);
+
+            if (!$form->isValid()) {
+                $errors = [];
+                foreach ($form->getErrors(true) as $error) {
+                    $property = $error->getCause()->getPropertyPath();
+                    $property = str_replace('data.', '', $property);
+                    $errors[$property] = $error->getMessage();
+                }
+                return new Response(json_encode(["errors" => $errors]), 400);
+            }
+        }
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post->setSlug(strtolower($slugger->slug($post->getTitle())));
+            $post->setUpdatedAt(new \DateTimeImmutable());
+
+            $em->flush();
+            return new RedirectResponse("/");
+        }
+        $formView = $form->createView();
+
+        return $this->render('post/edit.html.twig', [
+            'post' => $post,
             'formView' => $formView
         ]);
     }
