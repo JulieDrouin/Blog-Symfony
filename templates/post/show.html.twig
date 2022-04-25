@@ -1,29 +1,42 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-    Post_read
+    Page de {{ post.title }}
 {% endblock %}
 
 {% block body %}
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
-            <a href="{{ path("app_home") }}">Accueil</a>
+            <a href="{{ path('home') }}">
+                Accueil
+            </a>
         </li>
         <li class="breadcrumb-item">
-            <a href="{{ path("app_post_category", {'slug' : post.category.slug }) }}">{{ post.category.name }}</a>
+            <a href="{{ path('post_category', {'slug' : post.category.slug }) }}">
+                {{ post.category.name }}
+            </a>
         </li>
-        <li class="breadcrumb-item active">{{ post.title }}</li>
+        <li class="breadcrumb-item active">
+            {{ post.title }}
+        </li>
     </ol>
-    <h4 class="card-title">{{ post.title }}</h4>
+    <h4 class="card-title">
+        {{ post.title }}
+    </h4>
     <div class="row">
         <div class="col-4">
             <img src="{{ post.picture }}" class="img-fluid" alt="image de {{ post.title }}">
         </div>
         <div class="col">
-            <div class="text-muted">{{ post.category.name }}</div>
-            <span class="badge rounded-pill bg-info">{{ post.createdAt|date("d/m/Y") }}</span>
-            <p class="card-text">{{ post.content }}</p>
+            <div class="text-muted">
+                {{ post.category.name }}
+            </div>
+            <span class="badge rounded-pill bg-info">
+                {{ post.createdAt|date("d/m/Y") }}
+            </span>
+            <p class="card-text">
+                {{ post.content }}
+            </p>
         </div>
     </div>
-
 {% endblock %}

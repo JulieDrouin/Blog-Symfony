@@ -7,28 +7,41 @@
 {% block body %}
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
-            <a href="{{ path("app_home") }}">Accueil</a>
+            <a href="{{ path('home') }}">
+                Accueil
+            </a>
         </li>
-        <li class="breadcrumb-item active">{{ category.name }}</li>
+        <li class="breadcrumb-item active">
+            {{ category.name }}
+        </li>
     </ol>
-    <h1>Catégorie {{ category.name }}</h1>
-        {# {% if app.user is null %}
+    <h3>
+        Catégorie {{ category.name }}
+    </h3>
+    {# {% if app.user is null %}
             <a type="button" class="btn btn-success btn-sm" href="">Rechercher avec une nouvelle catégorie</a>
         {% endif %} #}
-        <div class="row">
-            {% for post in category.posts %}
-                <div class="col-3">
-                    <div class="card">
-                        <img src="{{ post.picture }}" class="img-fluid" alt="image du post">
-                        <div class="card-body">
-                            <h4 class="card-title">{{ post.title }}</h4>
-                            <span class="badge rounded-pill bg-info">{{ post.createdAt|date("d/m/Y") }}</span>
-                            <p class="card-text">{{ post.shortDescription }}</p>
-                            <a href="{{ path("app_post_read",  { 'category_slug': post.category.slug, 'slug': post.slug } ) }}" class="btn btn-primary btn-sm">Lire le post</a>
-                        </div>
+    <div class="row">
+        {% for post in category.posts %}
+            <div class="col-3">
+                <div class="card">
+                    <img src="{{ post.picture }}" class="img-fluid" alt="image du post">
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            {{ post.title }}
+                        </h4>
+                        <span class="badge rounded-pill bg-info">
+                            {{ post.createdAt|date("d/m/Y") }}
+                        </span>
+                        <p class="card-text">
+                            {{ post.shortDescription }}
+                        </p>
+                        <a href="{{ path('post_show',  { 'category_slug': post.category.slug, 'slug': post.slug } ) }}" class="btn btn-primary btn-sm">
+                            Lire le post
+                        </a>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
-
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
