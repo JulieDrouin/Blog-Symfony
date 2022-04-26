@@ -99,7 +99,7 @@ class PostController extends AbstractController
 
             $em->persist($post);
             $em->flush();
-            return new RedirectResponse("/");
+            return $this->redirectToRoute('post_dashboard');
         }
         $formView = $form->createView();
 
