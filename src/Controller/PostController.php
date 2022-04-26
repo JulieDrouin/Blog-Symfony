@@ -35,7 +35,7 @@ class PostController extends AbstractController
     }
 
     /**
-     * @Route("/{category_slug}/{slug}", name="post_show")
+     * @Route("/{category_slug}/{slug}", name="post_show", priority=-1)
      */
     public function show($slug, PostRepository $postRepository): Response
     {
@@ -49,6 +49,22 @@ class PostController extends AbstractController
 
         return $this->render('post/show.html.twig', [
             'post' => $post,
+        ]);
+    }
+
+    /**
+     * @Route("/admin/dashboard", name="post_dashboard")
+     */
+    public function showAll(PostRepository $postRepository): Response
+    {
+        $posts = $postRepository->findAll();
+
+        if (!$posts) {
+            throw $this->createNotFoundException("Il y a aucun article !");
+        }
+
+        return $this->render('admin/dashboard.html.twig', [
+            'posts' => $posts,
         ]);
     }
 
@@ -122,7 +138,8 @@ class PostController extends AbstractController
             $post->setUpdatedAt(new \DateTimeImmutable());
 
             $em->flush();
-            return new RedirectResponse("/");
+
+            return $this->redirectToRoute('post_dashboard');
         }
         $formView = $form->createView();
 
@@ -130,5 +147,21 @@ class PostController extends AbstractController
             'post' => $post,
             'formView' => $formView
         ]);
+    }
+
+    /**
+     * @Route("/admin/post/{id}/delete", name="post_delete")
+     */
+    public function delete($id, PostRepository $postRepository, Request $request, SluggerInterface $slugger, EntityManagerInterface $em): Response
+    {
+        $post = $postRepository->find($id);
+
+        if (!$post) {
+            return $this->redirectToRoute('post_dashboard');
+        }
+            $em->remove($post);
+            $em->flush();
+
+            return $this->redirectToRoute('post_dashboard');
     }
 }

@@ -1,0 +1,53 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Dashboard Admin
+{% endblock %}
+
+{% block body %}
+    <h4>
+        Dashboard
+    </h4>
+    <div class="mt-3">
+    <button type="submit" class="btn btn-success" role="button">
+        <a href="{{ path('post_create') }}" style="color: #FEFEFE; text-decoration: none">
+            Créer un nouveau post <i class="fa-solid fa-file-circle-plus"></i>
+        </a>
+    </button>
+</div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Article</th>
+                <th scope="col">Voir</th>
+                <th scope="col">Modifier</th>
+                <th scope="col">Supprimer</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for post in posts %}
+            <tr class="table-light">
+                <th scope="row">{{ post.id }}</th>
+                <th scope="row">{{ post.title }}</th>
+                <td>
+                    <button type="submit" class="btn btn-primary" role="button">
+                        <a href="{{ path('post_show', { 'category_slug': post.category.slug, 'slug': post.slug }) }}" style="color: #FEFEFE"><i class="fa-solid fa-eye"></i></a>
+                    </button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary" role="button">
+                        <a href="{{ path('post_edit', {'id': post.id }) }}" style="color: #FEFEFE"><i class="fa-solid fa-pen"></i></a>
+                    </button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary" role="button">
+                        <a href="{{ path('post_delete', {'id': post.id }) }}" style="color: #FEFEFE"><i class="fa-solid fa-trash-can"></i></a>
+                    </button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
