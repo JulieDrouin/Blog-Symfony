@@ -6,17 +6,17 @@
 
 {% block body %}
     <h4>
-        Dashboard
+        Dashboard Articles
     </h4>
     <div class="mt-3">
     <button type="submit" class="btn btn-success" role="button">
         <a href="{{ path('post_create') }}" style="color: #FEFEFE; text-decoration: none">
-            Créer un nouveau post <i class="fa-solid fa-file-circle-plus"></i>
+            Créer un nouvel article <i class="fa-solid fa-file-circle-plus"></i>
         </a>
     </button>
-    <button type="submit" class="btn btn-success" role="button">
-        <a href="{{ path('category_create') }}" style="color: #FEFEFE; text-decoration: none">
-            Créer une nouvelle catégorie <i class="fa-solid fa-file-circle-plus"></i>
+    <button type="submit" class="btn btn-info" role="button">
+        <a href="{{ path('category_dashboard') }}" style="color: #FEFEFE; text-decoration: none">
+            Voir les catégories
         </a>
     </button>
 </div>

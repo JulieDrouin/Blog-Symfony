@@ -1,0 +1,52 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Dashboard Admin
+{% endblock %}
+
+{% block body %}
+    <h4>
+        Dashboard Catégories
+    </h4>
+    <div class="mt-3">
+    <button type="submit" class="btn btn-success" role="button">
+        <a href="{{ path('category_create') }}" style="color: #FEFEFE; text-decoration: none">
+            Créer une nouvelle catégorie <i class="fa-solid fa-file-circle-plus"></i>
+        </a>
+    </button>
+    <button type="submit" class="btn btn-info" role="button">
+        <a href="{{ path('post_dashboard') }}" style="color: #FEFEFE; text-decoration: none">
+            Voir les articles
+        </a>
+    </button>
+</div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Modifier</th>
+                <th scope="col">Supprimer</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for category in categories %}
+            <tr class="table-light">
+                <th scope="row">{{ category.id }}</th>
+                <th scope="row">{{ category.name }}</th>
+                <td>
+                    <button type="submit" class="btn btn-primary" role="button">
+                        <a href="{{ path('category_edit', {'id': category.id }) }}" style="color: #FEFEFE"><i class="fa-solid fa-pen"></i></a>
+                    </button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary" role="button">
+                        <a href="{{ path('category_delete', {'id': category.id }) }}" style="color: #FEFEFE"><i class="fa-solid fa-trash-can"></i></a>
+                    </button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

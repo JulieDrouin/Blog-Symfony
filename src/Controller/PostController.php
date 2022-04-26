@@ -8,7 +8,6 @@ use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,7 +52,7 @@ class PostController extends AbstractController
     }
 
     /**
-     * @Route("/admin/dashboard", name="post_dashboard")
+     * @Route("/admin/dashboard/post", name="post_dashboard")
      */
     public function showAll(PostRepository $postRepository): Response
     {
@@ -63,7 +62,7 @@ class PostController extends AbstractController
             throw $this->createNotFoundException("Il y a aucun article !");
         }
 
-        return $this->render('admin/dashboard.html.twig', [
+        return $this->render('admin/dashboard_post.html.twig', [
             'posts' => $posts,
         ]);
     }
