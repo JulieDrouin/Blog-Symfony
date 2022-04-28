@@ -6,18 +6,35 @@
 
 {% block body %}
     <h1>Carnet de Voyage</h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ path('home') }}">
+                Accueil
+            </a>
+        </li>
+    </ol>
     <div class="row">
-        <div class="col">
-            <div class="card">
-                <img src="{{ post.picture }}" class="img-fluid" alt="image du post">
-                <div class="card-body">
-                    <h4 class="card-title">{{ post.title }}</h4>
-                    <span class="badge rounded-pill bg-info">{{ post.createdAt|date("d/m/Y") }}</span>
-                    <p class="card-text">{{ post.shortDescription }}</p>
-                    <a href="{{ path('post_show',  { 'category_slug': post.category.slug, 'slug': post.slug } ) }}" class="btn btn-primary btn-sm">Lire le post</a>
+        {% for post in posts %}
+            <div class="col-3">
+                <div class="card">
+                    <img src="{{ post.picture }}" class="img-fluid" alt="image du post">
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            {{ post.title }}
+                        </h4>
+                        <span class="badge rounded-pill bg-info">
+                            {{ post.createdAt|date("d/m/Y") }}
+                        </span>
+                        <p class="card-text">
+                            {{ post.shortDescription }}
+                        </p>
+                        <a href="{{ path('post_show',  { 'category_slug': post.category.slug, 'slug': post.slug } ) }}" class="btn btn-primary btn-sm">
+                            Lire le post
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endfor %}
     </div>
 
 {% endblock %}

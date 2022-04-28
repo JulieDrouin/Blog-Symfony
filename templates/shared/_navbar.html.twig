@@ -8,11 +8,13 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarColor03">
             <ul class="navbar-nav me-auto">
+            {% if is_granted('ROLE_ADMIN') %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('post_dashboard') }}">
                         Dashboard
                     </a>
                 </li>
+            {% endif %}
                 <li class="nav-item">
                     <a class="nav-link" href="#">
                         Tous les articles

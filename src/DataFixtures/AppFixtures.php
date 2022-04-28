@@ -64,7 +64,7 @@ class AppFixtures extends Fixture
                     ->setShortDescription($faker->text(100))
                     ->setContent($faker->realText(1200, 2))
                     ->setCreatedAt(new \DateTimeImmutable())
-                    ->setPicture($faker->imageUrl(1300, 1300, true))
+                    ->setPicture($faker->imageUrl(1000, 1000, true))
                     ->setCategory($category);
 
                 $manager->persist($post);

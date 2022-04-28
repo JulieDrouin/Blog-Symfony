@@ -30,7 +30,7 @@ class Category
     private $slug;
 
     /**
-     * @ORM\OneToMany(targetEntity=Post::class, mappedBy="category")
+     * @ORM\OneToMany(targetEntity=Post::class, mappedBy="category", orphanRemoval=true)
      */
     private $posts;
 
@@ -88,10 +88,12 @@ class Category
 
     public function removePost(Post $post): self
     {
-        if ($this->posts->removeElement($post)) {
-            // set the owning side to null (unless already changed)
-            if ($post->getCategory() === $this) {
-                $post->setCategory(null);
+        if ($this->posts->contains($post)) {
+            if ($this->posts->removeElement($post)) {
+                // set the owning side to null (unless already changed)
+                if ($post->getCategory() === $this) {
+                    $post->setCategory(null);
+                }
             }
         }
 
