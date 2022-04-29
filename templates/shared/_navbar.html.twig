@@ -15,30 +15,42 @@
                     </a>
                 </li>
             {% endif %}
+            {% for cat in categoryRepository.findAll() %}
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        Tous les articles
+                    <a class="nav-link" href="{{ path('post_category', {'slug' : cat.slug }) }}">
+                        {{ cat.name }}
                     </a>
                 </li>
+            {% endfor %}
+            {% if app.user %}
+                <li class="nav-item">
+                    <span class="nav-link">
+                        Vous êtes connecté:
+                        {{ app.user.username }}
+                    </span>
+                </li>
+            {% endif %}
+            </ul>
+            <ul class="navbar-nav">
                 {% if app.user %}
                     <li class="nav-item">
-                        <span class="nav-link">
-                            Vous êtes connecté:
-                            {{ app.user.username }}
-                        </span>
+                        <a class="btn btn-warning my-2 my-sm-0" href="{{ path('logout') }}">
+                            Se Deconnecter
+                        </a>
                     </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        Inscription
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-primary my-2 my-sm-0" href="{{ path('security_login') }}">
+                        Se Connecter
+                    </a>
+                </li>
                 {% endif %}
             </ul>
-            {% if app.user %}
-                <a type="button" class="btn btn-warning my-2 my-sm-0" href="{{ path('logout') }}">
-                    Se Deconnecter
-                </a>
-            {% endif %}
-            {% if app.user is null %}
-                <a type="button" class="btn btn-primary my-2 my-sm-0" href="{{ path('security_login') }}">
-                    Connexion
-                </a>
-            {% endif %}
         </div>
     </div>
 </nav>
