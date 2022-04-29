@@ -19,19 +19,23 @@ class PostType extends AbstractType
         $builder
             ->add('title', TextType::class, [
                 'label' => "Titre de l'article",
-                'attr' => ['placeholder' => 'Tapez le titre']
+                'attr' => ['placeholder' => 'Tapez le titre'],
+                'required' => false,
             ])
             ->add('shortDescription', TextType::class, [
                 'label' => "Résumé de l'article",
-                'attr' => ['placeholder' => "Tapez un court résumé de votre article"]
+                'attr' => ['placeholder' => "Tapez un court résumé de votre article"],
+                'required' => false,
             ])
             ->add('content', TextareaType::class, [
                 'label' => "Le contenu de l'article",
-                'attr' => ['placeholder' => 'Tapez le contenu de votre article']
+                'attr' => ['placeholder' => 'Tapez le contenu de votre article'],
+                'required' => false,
             ])
             ->add('picture', UrlType::class, [
                 'label' => "Image de l'article",
-                'attr' => ['placeholder' => 'Tapez une url d\'image']
+                'attr' => ['placeholder' => 'Tapez une url d\'image'],
+                'required' => false,
             ])
             ->add('category', EntityType::class, [
                 'label' => "Catégorie",
