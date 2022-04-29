@@ -1,20 +1,28 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-    Accueil
+    Catégorie {{ slug }}
 {% endblock %}
 
 {% block body %}
-    <h1>Carnet de Voyage</h1>
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
             <a href="{{ path('home') }}">
                 Accueil
             </a>
         </li>
+        <li class="breadcrumb-item active">
+            {{ category.name }}
+        </li>
     </ol>
+    <h3>
+        Catégorie {{ category.name }}
+    </h3>
+    {# {% if app.user is null %}
+            <a type="button" class="btn btn-success btn-sm" href="">Rechercher avec une nouvelle catégorie</a>
+        {% endif %} #}
     <div class="row">
-        {% for post in posts %}
+        {% for post in category.posts %}
             <div class="col-3">
                 <div class="card">
                     <img src="{{ post.picture }}" class="img-fluid" alt="image du post">
@@ -36,5 +44,4 @@
             </div>
         {% endfor %}
     </div>
-
 {% endblock %}

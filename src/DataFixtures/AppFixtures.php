@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Category;
 use App\Entity\Post;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -35,7 +36,7 @@ class AppFixtures extends Fixture
 
         $manager->persist($admin);
 
-        for ($u=0; $u < 5; $u++) {
+        for ($u = 0; $u < 5; $u++) {
             $user = new User();
             $newName = $faker->firstName(null);
             $name = strtolower(strtok($newName, ' '));
@@ -45,29 +46,29 @@ class AppFixtures extends Fixture
             $user->setUsername($name)
                 ->setEmail("$name@gmail.com")
                 ->setPassword($hash);
+
             $manager->persist($user);
         }
-        for ($p=0; $p < 10; $p++) {
-            $post = new Post;
-            $post->setTitle($faker->state())
-                ->setSlug(strtolower($this->slugger->slug($post->getTitle())))
-                ->setContent($faker->realText(200, 2))
-                ->setCreatedAt(new \DateTimeImmutable())
-                ->setPicture($faker->imageUrl(1300, 1300, true));
 
-            $manager->persist($post);
+        for ($c = 0; $c < 5; $c++) {
+            $category = new Category;
+            $category->setName($faker->country())
+                ->setSlug(strtolower($this->slugger->slug($category->getName())));
 
-            // for ($p=0; $p < mt_rand(15, 20); $p++) {
-            //     $product = new Product();
-            //     $product->setName($faker->sentence())
-            //         ->setPrice($faker->price(4000, 20000))
-            //         ->setSlug(strtolower($this->slugger->slug($product->getName())))
-            //         ->setCategory($post)
-            //         ->setShortDescription($faker->paragraph())
-            //         ->setMainPicture($faker->imageUrl(400, 400, true));
+            $manager->persist($category);
 
-            //     $manager->persist($product);
-            // }
+            for ($p = 0; $p < mt_rand(15, 20); $p++) {
+                $post = new Post;
+                $post->setTitle($faker->state())
+                    ->setSlug(strtolower($this->slugger->slug($post->getTitle())))
+                    ->setShortDescription($faker->text(100))
+                    ->setContent($faker->realText(1200, 2))
+                    ->setCreatedAt(new \DateTimeImmutable())
+                    ->setPicture($faker->imageUrl(1000, 1000, true))
+                    ->setCategory($category);
+
+                $manager->persist($post);
+            }
         }
 
         $manager->flush();

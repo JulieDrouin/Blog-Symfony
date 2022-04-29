@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
@@ -19,6 +20,8 @@ class Post
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le titre de l'article est obligatoire !")
+     * @Assert\Length(min=3, max=255, minMessage="Le titre de l'article doit avoir au moins 3 caractères")
      */
     private $title;
 
@@ -29,11 +32,22 @@ class Post
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank(message="Le résumé de l'article est obligatoire !")
+     * @Assert\Length(min=3, max=255, maxMessage="Le résumé de l'article doit avoir au maximum 255 caractères")
+     */
+    private $shortDescription;
+
+    /**
+     * @ORM\Column(type="text")
+     * @Assert\NotBlank(message="Le contenu de l'article est obligatoire !")
+     * @Assert\Length(min=255, minMessage="Le contenu de l'article doit avoir plus de 255 caractères")
      */
     private $content;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="L'image de l'article est obligatoire !")
+     * @Assert\Url()
      */
     private $picture;
 
@@ -45,7 +59,12 @@ class Post
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    private $updatesAt;
+    private $updatedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="posts")
+     */
+    private $category;
 
     public function getId(): ?int
     {
@@ -72,6 +91,18 @@ class Post
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getShortDescription(): ?string
+    {
+        return $this->shortDescription;
+    }
+
+    public function setShortDescription(string $shortDescription): self
+    {
+        $this->shortDescription = $shortDescription;
 
         return $this;
     }
@@ -112,14 +143,26 @@ class Post
         return $this;
     }
 
-    public function getUpdatesAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->updatesAt;
+        return $this->updatedAt;
     }
 
-    public function setUpdatesAt(\DateTimeImmutable $updatesAt): self
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
     {
-        $this->updatesAt = $updatesAt;
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }

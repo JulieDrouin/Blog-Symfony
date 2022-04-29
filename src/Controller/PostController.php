@@ -3,58 +3,164 @@
 namespace App\Controller;
 
 use App\Entity\Post;
+use App\Form\PostType;
+use App\Repository\CategoryRepository;
+use App\Repository\PostRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class PostController extends AbstractController
 {
     /**
-     * @Route("/post-{id}", name="app_post_read_id")
-     * @param Post $post
+     * @Route("/{slug}", name="post_category", priority=-1)
      */
-    public function read(Post $post): Response
+    public function category($slug, CategoryRepository $categoryRepository): Response
     {
-        return $this->render('post/index.html.twig', [
-            "post" => $post
+        $category = $categoryRepository->findOneBy([
+            'slug' => $slug
+        ]);
+
+        if (!$category) {
+            throw $this->createNotFoundException("La catégorie n'existe pas");
+        }
+        return $this->render('post/category.html.twig', [
+            'slug' => $slug,
+            'category' => $category
         ]);
     }
 
     /**
-     * @Route("/admin/post/create", name="app_post_create")
-     * @param Post $post
+     * @Route("/{category_slug}/{slug}", name="post_show", priority=-1)
      */
-    public function create(FormFactoryInterface $factory): Response
+    public function show($slug, PostRepository $postRepository): Response
     {
+        $post = $postRepository->findOneBy([
+            'slug' => $slug
+        ]);
 
-        $builder = $factory->createBuilder();
+        if (!$post) {
+            throw $this->createNotFoundException("L'article demandé n'existe pas");
+        }
 
-        $builder->add('titre', TextType::class, [
-            'label' => "Titre de l'article",
-            'attr' => ['class' => 'form-control', 'placeholder' => 'Tapez le titre']
-        ])
-            ->add('slug', TextType::class, [
-                'label' => "Slug de l'article",
-                'attr' => ['class' => 'form-control', 'placeholder' => 'Tapez le slug']
-            ])
-            ->add('content', TextareaType::class, [
-                'label' => "Le contenu de l'article",
-                'attr' => ['class' => 'form-control', 'placeholder' => 'Tapez le contenu de votre article']
-            ])
-            ->add('picture', TextType::class, [
-                'label' => "Image de l'article",
-                'attr' => ['class' => 'form-control', 'placeholder' => "Tapez le lien vers l'image de votre article"]
-            ]);
+        return $this->render('post/show.html.twig', [
+            'post' => $post,
+        ]);
+    }
 
-        $form = $builder->getForm();
+    /**
+     * @Route("/admin/dashboard/post", name="post_dashboard")
+     */
+    public function showAll(PostRepository $postRepository): Response
+    {
+        $posts = $postRepository->findAll();
 
+        if (!$posts) {
+            throw $this->createNotFoundException("Il y a aucun article !");
+        }
+
+        return $this->render('admin/dashboard_post.html.twig', [
+            'posts' => $posts,
+        ]);
+    }
+
+    /**
+     * @Route("/admin/post/create", name="post_create")
+     */
+    public function create(Request $request, SluggerInterface $slugger, EntityManagerInterface $em): Response
+    {
+        $post = new Post();
+        $form = $this->createForm(PostType::class, $post);
+
+        $form->handleRequest($request);
+
+        if ($request->isXmlHttpRequest()) {
+            $data = json_decode($request->getContent(), true);
+            $form->submit($data);
+
+            if (!$form->isValid()) {
+                $errors = [];
+                foreach ($form->getErrors(true) as $error) {
+                    $property = $error->getCause()->getPropertyPath();
+                    $property = str_replace('data.', '', $property);
+                    $errors[$property] = $error->getMessage();
+                }
+                return new Response(json_encode(["errors" => $errors]), 400);
+            }
+        }
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post->setSlug(strtolower($slugger->slug($post->getTitle())));
+            $post->setCreatedAt(new \DateTimeImmutable());
+
+            $em->persist($post);
+            $em->flush();
+            return $this->redirectToRoute('post_dashboard');
+        }
         $formView = $form->createView();
 
         return $this->render('post/create.html.twig', [
             'formView' => $formView
         ]);
+    }
+
+    /**
+     * @Route("/admin/post/{id}/edit", name="post_edit")
+     */
+    public function edit($id, PostRepository $postRepository, Request $request, SluggerInterface $slugger, EntityManagerInterface $em): Response
+    {
+        $post = $postRepository->find($id);
+        $form = $this->createForm(PostType::class, $post);
+
+        $form->handleRequest($request);
+
+        if ($request->isXmlHttpRequest()) {
+            $data = json_decode($request->getContent(), true);
+            $form->submit($data);
+
+            if (!$form->isValid()) {
+                $errors = [];
+                foreach ($form->getErrors(true) as $error) {
+                    $property = $error->getCause()->getPropertyPath();
+                    $property = str_replace('data.', '', $property);
+                    $errors[$property] = $error->getMessage();
+                }
+                return new Response(json_encode(["errors" => $errors]), 400);
+            }
+        }
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post->setSlug(strtolower($slugger->slug($post->getTitle())));
+            $post->setUpdatedAt(new \DateTimeImmutable());
+
+            $em->flush();
+
+            return $this->redirectToRoute('post_dashboard');
+        }
+        $formView = $form->createView();
+
+        return $this->render('post/edit.html.twig', [
+            'post' => $post,
+            'formView' => $formView
+        ]);
+    }
+
+    /**
+     * @Route("/admin/post/{id}/delete", name="post_delete")
+     */
+    public function delete($id, PostRepository $postRepository, Request $request, SluggerInterface $slugger, EntityManagerInterface $em): Response
+    {
+        $post = $postRepository->find($id);
+
+        if (!$post) {
+            return $this->redirectToRoute('post_dashboard');
+        }
+            $em->remove($post);
+            $em->flush();
+
+            return $this->redirectToRoute('post_dashboard');
     }
 }

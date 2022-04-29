@@ -1,12 +1,12 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-    Creation d'un article
+    Modification de l'article {{ post.title }}
 {% endblock %}
 
 {% block body %}
     <h4>
-        Nouvel article
+        Modifier l'article {{ post.title }}
     </h4>
     <div class="mt-3">
         <a type="button" class="btn btn-success btn-sm mb-3" href="{{ path('post_dashboard') }}">Retourner au dashboard</a>
@@ -25,7 +25,7 @@
             <div class="mt-3">
                 <button type="submit" class="btn btn-primary" role="button">
                     <i class="fas fa-save"></i>
-                    Créer
+                    Modifier
                 </button>
             </div>
         </div>

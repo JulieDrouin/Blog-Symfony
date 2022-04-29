@@ -1,12 +1,12 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-    Creation d'un article
+    Creation d'une catégorie
 {% endblock %}
 
 {% block body %}
     <h4>
-        Nouvel article
+        Nouvelle catégorie
     </h4>
     <div class="mt-3">
         <a type="button" class="btn btn-success btn-sm mb-3" href="{{ path('post_dashboard') }}">Retourner au dashboard</a>
@@ -14,13 +14,7 @@
         {{ form_errors(formView) }}
         <div class="row">
             <div class="col">
-                {{ form_row(formView.title) }}
-                {{ form_row(formView.shortDescription) }}
-                {{ form_row(formView.content) }}
-            </div>
-            <div class="col">
-                {{ form_row(formView.picture) }}
-                {{ form_row(formView.category) }}
+                {{ form_row(formView.name) }}
             </div>
             <div class="mt-3">
                 <button type="submit" class="btn btn-primary" role="button">
